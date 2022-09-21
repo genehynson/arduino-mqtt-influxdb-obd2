@@ -1,7 +1,8 @@
-#include "ELMduino.h"
+#include <ELMduino.h>
 #include <WiFiNINA.h>
 #include <ArduinoMqttClient.h>
 #include <TinyGPS++.h>
+#include <utility/wifi_drv.h>
 
 // elm327
 ELM327 elm;
@@ -14,8 +15,8 @@ TinyGPSPlus gps;
 unsigned long cas = 0;
 
 // wifi
-char ssid[] = "GenePixel";
-char pass[] = "geneisthebest";
+char ssid[] = "wifi";
+char pass[] = "pass";
 int status = WL_IDLE_STATUS;
 WiFiClient wifiClient;
 
@@ -32,14 +33,22 @@ unsigned long previousMillis = 0;
 
 void setup()
 {
+  // LEDs
+  WiFiDrv::pinMode(25, OUTPUT);
+  WiFiDrv::pinMode(26, OUTPUT);
+  WiFiDrv::pinMode(27, OUTPUT);
+  off();
+
   // hc-05 connect to elm327
   Serial1.begin(9600);
   elm.begin(Serial1, true, 5000);
   
   // wifi connect
   Serial.begin(9600);
-  while (!Serial);
   while (WiFi.status() != WL_CONNECTED) {
+    off();
+    delay(100);
+    red();
     Serial.print("Attempting to connect to network: ");
     Serial.println(ssid);
     WiFi.begin(ssid, pass);
@@ -50,6 +59,8 @@ void setup()
   Serial.print("IP Address: ");
   Serial.println(ip);
 
+  blue();
+
   // mqtt connect
   if (!mqttClient.connect(host, port)) {
     Serial.print("MQTT broker connection failed! Error code = ");
@@ -58,6 +69,9 @@ void setup()
   }
   Serial.print("Connected to MQTT broker: ");
   Serial.println(host);
+
+  green();
+  delay(2000);
 }
 
 void loop()
@@ -129,8 +143,14 @@ void processOBD(float value, String subTopic) {
     mqttClient.beginMessage(topic + subTopic);
     mqttClient.print(value);
     mqttClient.endMessage();
+    green();
+    delay(100);
     state += 1;
-  } else if (elm.nb_rx_state != ELM_GETTING_MSG) {
+  } else if (elm.nb_rx_state == ELM_GETTING_MSG) {
+    blue();
+  } else {
+    red();
+    delay(100);
     elm.printError();
     state += 1;
   }
@@ -153,4 +173,28 @@ void processGPS() {
       mqttClient.endMessage();
     }
   }
+}
+
+void green() {
+  WiFiDrv::analogWrite(25, 0);
+  WiFiDrv::analogWrite(26, 255);
+  WiFiDrv::analogWrite(27, 0);
+}
+
+void blue() {
+  WiFiDrv::analogWrite(25, 0);
+  WiFiDrv::analogWrite(26, 0);
+  WiFiDrv::analogWrite(27, 255);
+}
+
+void red() {
+  WiFiDrv::analogWrite(25, 255);
+  WiFiDrv::analogWrite(26, 0);
+  WiFiDrv::analogWrite(27, 0);
+}
+
+void off() {
+  WiFiDrv::analogWrite(25, 0);
+  WiFiDrv::analogWrite(26, 0);
+  WiFiDrv::analogWrite(27, 0);
 }

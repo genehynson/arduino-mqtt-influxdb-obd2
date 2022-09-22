@@ -113,3 +113,22 @@ My example only collects 14 or so data points from the ODB device. There are man
 ## Bluetooth Low Energy (BLE)?
 
 The MKR1010 natively has support for BLE. The HC-05 module does not. And the ELM327 device I linked above does not. However, there are ELM327 devices (such as [this one](https://www.amazon.com/dp/B073XKQQQW?psc=1&ref=ppx_yo2ov_dt_b_product_details)) that do support BLE. It should be possible to use the ArduinoBLE library to pair the MKR1010 directly to the ELM327 BLE reader, but I have not tried this. Perhaps a future iteration of this project will attempt it.
+
+## Useful Links
+
+MQTT
+- https://create.arduino.cc/projecthub/jassak/mqtt-obd-vehicle-telemetry-f120c4
+- https://docs.arduino.cc/tutorials/uno-wifi-rev2/uno-wifi-r2-mqtt-device-to-device
+
+HC-05
+- https://howtomechatronics.com/tutorials/arduino/how-to-configure-pair-two-hc-05-bluetooth-module-master-slave-commands/
+
+BLE
+- https://github.com/arduino-libraries/ArduinoBLE/blob/master/examples/Central/PeripheralExplorer/PeripheralExplorer.ino
+- https://www.arduino.cc/en/Guide/MKRWiFi1010/enabling-ble
+
+MKR1010
+- https://docs.arduino.cc/static/fc77c3c3c77d69764ba7773df64c99db/ABX00023-datasheet.pdf
+
+ELM327
+- https://github.com/PowerBroker2/ELMduino

@@ -109,3 +109,7 @@ from(bucket: "my_bucket")
 ## More data?
 
 My example only collects 14 or so data points from the ODB device. There are many more you can capture! Simply extend the `switch` block and invoke any other functions in the [elmduino](https://github.com/PowerBroker2/ELMduino) library. And make sure to add the corresponding sub topic to the `subTopics` array.
+
+## Bluetooth Low Energy (BLE)?
+
+The MKR1010 natively has support for BLE. The HC-05 module does not. And the ELM327 device I linked above does not. However, there are ELM327 devices (such as [this one](https://www.amazon.com/dp/B073XKQQQW?psc=1&ref=ppx_yo2ov_dt_b_product_details)) that do support BLE. It should be possible to use the ArduinoBLE library to pair the MKR1010 directly to the ELM327 BLE reader, but I have not tried this. Perhaps a future iteration of this project will attempt it.
